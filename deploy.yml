@@ -30,8 +30,8 @@
 
     - name: Copy website image
       copy:
-        src: image.png
-        dest: /var/www/html/image.png
+        src: image1.jpg
+        dest: /var/www/html/image1.jpg
         owner: www-data
         group: www-data
         mode: '0644'
