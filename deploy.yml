@@ -27,3 +27,11 @@
         owner: www-data
         group: www-data
         mode: '0644'
+
+    - name: Copy website image
+      copy:
+        src: image.png
+        dest: /var/www/html/image.png
+        owner: www-data
+        group: www-data
+        mode: '0644'
