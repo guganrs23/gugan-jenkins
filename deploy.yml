@@ -17,14 +17,13 @@
         mode: '0755'
         recurse: yes
 
-    - name: Copy website files
-      copy:
+    - name: Deploy website files
+      synchronize:
         src: .
         dest: /var/www/html
-        owner: ubuntu
-        group: ubuntu
-        mode: '0644'
-        exclude:
-          - .git
-          - inventory.ini
-          - deploy.yml
+        delete: yes
+        rsync_opts:
+          - "--exclude=.git"
+          - "--exclude=inventory.ini"
+          - "--exclude=deploy.yml"
+          - "--exclude=Jenkinsfile"
