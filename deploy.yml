@@ -1,6 +1,7 @@
+---
 - name: Deploy website using Ansible
-  hosts: apache
-  become: true
+  hosts: web
+  become: yes
 
   tasks:
     - name: Install Apache
@@ -9,21 +10,29 @@
         state: present
         update_cache: yes
 
-    - name: Set ownership for web directory
-      file:
-        path: /var/www/html
-        owner: ubuntu
-        group: ubuntu
-        mode: '0755'
-        recurse: yes
+    - name: Ensure Apache is running
+      service:
+        name: apache2
+        state: started
+        enabled: yes
 
-    - name: Deploy website files
-      synchronize:
-        src: .
-        dest: /var/www/html
-        delete: yes
-        rsync_opts:
-          - "--exclude=.git"
-          - "--exclude=inventory.ini"
-          - "--exclude=deploy.yml"
-          - "--exclude=Jenkinsfile"
+    - name: Remove default Apache page
+      file:
+        path: /var/www/html/index.html
+        state: absent
+
+    - name: Copy index.html from Jenkins
+      copy:
+        src: index.html
+        dest: /var/www/html/index.html
+        owner: www-data
+        group: www-data
+        mode: '0644'
+
+    - name: Copy image file from Jenkins
+      copy:
+        src: image.png
+        dest: /var/www/html/image.png
+        owner: www-data
+        group: www-data
+        mode: '0644'
