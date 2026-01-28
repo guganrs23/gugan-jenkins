@@ -1,0 +1,30 @@
+- name: Deploy website using Ansible
+  hosts: apache
+  become: true
+
+  tasks:
+    - name: Install Apache
+      apt:
+        name: apache2
+        state: present
+        update_cache: yes
+
+    - name: Set ownership for web directory
+      file:
+        path: /var/www/html
+        owner: ubuntu
+        group: ubuntu
+        mode: '0755'
+        recurse: yes
+
+    - name: Copy website files
+      copy:
+        src: .
+        dest: /var/www/html
+        owner: ubuntu
+        group: ubuntu
+        mode: '0644'
+        exclude:
+          - .git
+          - inventory.ini
+          - deploy.yml
