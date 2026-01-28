@@ -9,22 +9,21 @@
         state: present
         update_cache: yes
 
-    - name: Set ownership for web directory
-      file:
-        path: /var/www/html
-        owner: ubuntu
-        group: ubuntu
-        mode: '0755'
-        recurse: yes
+    - name: Ensure Apache is running
+      service:
+        name: apache2
+        state: started
+        enabled: true
 
-    - name: Copy website files
+    - name: Remove default Apache index
+      file:
+        path: /var/www/html/index.html
+        state: absent
+
+    - name: Copy website index.html
       copy:
-        src: .
-        dest: /var/www/html
-        owner: ubuntu
-        group: ubuntu
+        src: index.html
+        dest: /var/www/html/index.html
+        owner: www-data
+        group: www-data
         mode: '0644'
-        exclude:
-          - .git
-          - inventory.ini
-          - deploy.yml
